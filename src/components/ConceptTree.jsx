@@ -1,7 +1,10 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import StatusIcon from './StatusIcon';
 
-const ConceptTree = memo(function ConceptTree({ node, currentNodeId, selections, currentPath, setCurrentPath }) {
+const ConceptTree = memo(function ConceptTree({ node, currentNodeId, selections, currentPath, setCurrentPath, isEditMode, updateNode }) {
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(node.title);
+  
   const isSelected = !!selections[node.id];
   const isRoot = node.id === 'root';
   
@@ -14,6 +17,29 @@ const ConceptTree = memo(function ConceptTree({ node, currentNodeId, selections,
   
   const isCurrent = currentNodeId === node.id;
   const hasVisibleChildren = visibleChildren.length > 0;
+
+  // Manejar la edición del título
+  const handleTitleDoubleClick = () => {
+    if (isEditMode && !isRoot) {
+      setIsEditingTitle(true);
+    }
+  };
+
+  const handleTitleSave = () => {
+    if (editedTitle.trim() !== '') {
+      updateNode(node.id, { title: editedTitle.trim() });
+    }
+    setIsEditingTitle(false);
+  };
+
+  const handleTitleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleTitleSave();
+    } else if (e.key === 'Escape') {
+      setEditedTitle(node.title);
+      setIsEditingTitle(false);
+    }
+  };
 
 
 
@@ -45,11 +71,12 @@ const ConceptTree = memo(function ConceptTree({ node, currentNodeId, selections,
         onClick={() => {
           if (node.id === 'root') setCurrentPath(['root']);
         }}
+        onDoubleClick={handleTitleDoubleClick}
         className={`
           node-card relative inline-flex flex-col items-center p-3 rounded-xl border-2 transition-all z-10
           ${getBorderAndShadow()}
           ${getBackgroundColor()}
-          ${isRoot ? 'cursor-pointer hover:border-[#005C35]/50' : 'cursor-default'}
+          ${isRoot ? 'cursor-pointer hover:border-[#005C35]/50' : isEditMode ? 'cursor-text' : 'cursor-default'}
         `}
         role={isRoot ? "button" : "presentation"}
         tabIndex={isRoot ? 0 : -1}
@@ -67,9 +94,24 @@ const ConceptTree = memo(function ConceptTree({ node, currentNodeId, selections,
           ) : (
             <div className={`w-4 h-4 rounded-full border-2 ${isRoot ? 'bg-[#005C35] border-[#005C35]' : 'border-gray-300'}`} />
           )}
-          <span className={`font-bold whitespace-nowrap ${isRoot ? 'text-lg text-[#005C35]' : 'text-sm text-gray-700'}`}>
-            {node.title}
-          </span>
+          {isEditingTitle ? (
+            <input
+              type="text"
+              value={editedTitle}
+              onChange={(e) => setEditedTitle(e.target.value)}
+              onBlur={handleTitleSave}
+              onKeyDown={handleTitleKeyDown}
+              autoFocus
+              className="font-bold text-sm text-gray-700 bg-white border border-[#005C35] rounded px-2 py-1 outline-none min-w-[120px]"
+            />
+          ) : (
+            <span 
+              className={`font-bold whitespace-nowrap ${isRoot ? 'text-lg text-[#005C35]' : 'text-sm text-gray-700'}`}
+              title={isEditMode && !isRoot ? 'Doble click para editar' : ''}
+            >
+              {node.title}
+            </span>
+          )}
         </div>
         {!isRoot && (
           <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full max-w-[150px] truncate text-center ${isSelected ? (selections[node.id].status === 'done' ? 'text-[#005C35] bg-[#005C35]/10' : 'text-[#b58500] bg-[#F2A900]/20') : 'text-gray-400 bg-gray-100'}`}>
@@ -88,6 +130,8 @@ const ConceptTree = memo(function ConceptTree({ node, currentNodeId, selections,
               selections={selections}
               currentPath={currentPath}
               setCurrentPath={setCurrentPath}
+              isEditMode={isEditMode}
+              updateNode={updateNode}
             />
           ))}
         </ul>

@@ -2,7 +2,8 @@ name: Deploy React to Pages
 
 on:
   push:
-    branches: ["master"]
+    branches:
+      - rama-pruebas
 
 permissions:
   contents: read
