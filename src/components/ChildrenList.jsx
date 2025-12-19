@@ -23,10 +23,23 @@ export default function ChildrenList({ children, selections, setCurrentPath, cur
               ) : (
                 <div className="w-6 h-6 rounded-full border-2 border-gray-200 group-hover:border-[#F2A900] bg-gray-50" />
               )}
-              <div>
-                <span className="font-bold text-gray-800 block group-hover:text-[#005C35] transition-colors">
-                  {child.title}
-                </span>
+              <div className="flex-1">
+                {child.imageUrl ? (
+                  <div className="flex items-center gap-3">
+                    <img 
+                      src={child.imageUrl} 
+                      alt={child.title}
+                      className="h-6 w-auto max-w-[80px] object-contain"
+                    />
+                    <span className="font-bold text-gray-800 block group-hover:text-[#005C35] transition-colors">
+                      {child.title}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="font-bold text-gray-800 block group-hover:text-[#005C35] transition-colors">
+                    {child.title}
+                  </span>
+                )}
                 <span className="text-sm text-gray-500 line-clamp-1 font-medium">
                   {child.description}
                 </span>

@@ -95,6 +95,7 @@ export default function useIntegrationBuilder() {
     const newNode = {
       id: newNodeId,
       title: 'Nuevo Nodo',
+      imageUrl: '', // Nueva propiedad para imagen opcional
       type: 'feature',
       description: 'Descripción del nuevo nodo',
       techDetails: '',

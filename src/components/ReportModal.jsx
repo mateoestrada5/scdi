@@ -159,6 +159,13 @@ export default function ReportModal({ showReport, setShowReport, roadmapName, se
                 <div className="flex justify-between items-start">
                   <div className="flex items-center gap-2">
                     <StatusIcon status={item.status} className="w-5 h-5" />
+                    {item.imageUrl && (
+                      <img 
+                        src={item.imageUrl} 
+                        alt={item.title}
+                        className="h-8 w-auto max-w-[80px] object-contain"
+                      />
+                    )}
                     <h3 className="font-semibold text-lg text-gray-800">{item.title}</h3>
                     <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${item.status === 'done' ? 'bg-[#005C35]/10 text-[#005C35]' : 'bg-[#F2A900]/20 text-[#b58500]'}`}>
                       {item.status === 'done' ? 'IMPLEMENTADO' : 'PENDIENTE'}

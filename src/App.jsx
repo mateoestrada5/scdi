@@ -106,9 +106,23 @@ export default function SiroIntegrationBuilder() {
                   <section className="mb-6">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
-                    <h1 className="text-3xl font-black text-[#005C35] mt-2 mb-2 leading-tight tracking-tight">
-                      {currentNode.title}
-                    </h1>
+                    {/* Mostrar imagen si existe, sino mostrar título normal */}
+                    {currentNode.imageUrl ? (
+                      <div className="mb-4">
+                        <img 
+                          src={currentNode.imageUrl} 
+                          alt={currentNode.title}
+                          className="h-16 w-auto max-w-xs object-contain mb-2"
+                        />
+                        <h1 className="text-2xl font-black text-[#005C35] leading-tight tracking-tight">
+                          {currentNode.title}
+                        </h1>
+                      </div>
+                    ) : (
+                      <h1 className="text-3xl font-black text-[#005C35] mt-2 mb-2 leading-tight tracking-tight">
+                        {currentNode.title}
+                      </h1>
+                    )}
                     <div className="h-1 w-20 bg-[#F2A900] rounded-full mb-4" aria-hidden="true"></div>
                     <p className="text-gray-600 text-lg leading-relaxed font-medium">
                       {currentNode.description}

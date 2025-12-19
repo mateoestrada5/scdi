@@ -4,6 +4,7 @@ import { Save, Plus, Trash2 } from 'lucide-react';
 export default function EditNodePanel({ currentNode, updateNode, addChildNode, deleteNode, currentPath, setCurrentPath }) {
   const [editedData, setEditedData] = useState({
     title: currentNode.title,
+    imageUrl: currentNode.imageUrl || '',
     description: currentNode.description,
     techDetails: currentNode.techDetails || '',
     snippet: currentNode.snippet || ''
@@ -60,6 +61,37 @@ export default function EditNodePanel({ currentNode, updateNode, addChildNode, d
             onChange={(e) => setEditedData({ ...editedData, title: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#005C35] focus:ring-1 focus:ring-[#005C35]"
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-bold text-gray-700 mb-1">
+            URL de Imagen (opcional)
+          </label>
+          <input
+            type="text"
+            value={editedData.imageUrl}
+            onChange={(e) => setEditedData({ ...editedData, imageUrl: e.target.value })}
+            placeholder="https://ejemplo.com/imagen.png"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#005C35] focus:ring-1 focus:ring-[#005C35]"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Si agregas una imagen, reemplazará al título en el árbol (el título se verá al pasar el mouse)
+          </p>
+          {editedData.imageUrl && (
+            <div className="mt-2 p-2 bg-gray-50 rounded border border-gray-200">
+              <p className="text-xs font-semibold text-gray-700 mb-1">Vista previa:</p>
+              <img 
+                src={editedData.imageUrl} 
+                alt="Preview" 
+                className="h-8 w-auto object-contain"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextElementSibling.style.display = 'block';
+                }}
+              />
+              <p className="hidden text-xs text-red-500">Error al cargar la imagen</p>
+            </div>
+          )}
         </div>
 
         <div>
