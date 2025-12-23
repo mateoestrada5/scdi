@@ -1,8 +1,9 @@
-name: Deploy React to Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["master"]
+    branches:
+      - rama-pruebas
 
 permissions:
   contents: read
@@ -34,7 +35,7 @@ jobs:
         
       - name: Build
         # Este comando fuerza la ruta correcta sin que tengas que editar vite.config.js
-        run: npm run build -- --base=/integration-builder-v1/
+        run: npm run build -- --base=/scdi/
         
       - name: Setup Pages
         uses: actions/configure-pages@v4

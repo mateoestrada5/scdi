@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Edit2, FileText, Share2, MessageCircle } from 'lucide-react';
-import { SIRO_DATA } from './data/siroData';
 import useIntegrationBuilder from './hooks/useIntegrationBuilder';
 import Header from './components/Header';
 import Breadcrumbs from './components/Breadcrumbs';
@@ -9,6 +8,7 @@ import TechnicalDetails from './components/TechnicalDetails';
 import ChildrenList from './components/ChildrenList';
 import ConceptTree from './components/ConceptTree';
 import ReportModal from './components/ReportModal';
+import EditNodePanel from './components/EditNodePanel';
 
 export default function SiroIntegrationBuilder() {
   const {
@@ -29,6 +29,13 @@ export default function SiroIntegrationBuilder() {
     currentNodeId,
     findNode,
     selectedNodes,
+    isEditMode,
+    setIsEditMode,
+    treeData,
+    updateNode,
+    addChildNode,
+    deleteNode,
+    resetTreeData,
   } = useIntegrationBuilder();
 
   // Estado para pan y zoom
@@ -59,7 +66,18 @@ export default function SiroIntegrationBuilder() {
       {/* --- PANEL IZQUIERDO (CONTROLES) --- */}
       <aside className="ml-10 w-5/10 flex flex-col bg-white shadow-xl z-20 rounded-xl overflow-hidden p-4">
         
-        <Header />
+        <Header isEditMode={isEditMode} setIsEditMode={setIsEditMode} />
+        
+        {isEditMode && (
+          <div className="mx-6 mt-4 p-3 bg-[#F2A900]/10 border-l-4 border-[#F2A900] rounded-lg">
+            <p className="text-sm font-semibold text-gray-800">
+              🎨 Modo Edición Activo
+            </p>
+            <p className="text-xs text-gray-600 mt-1">
+              Doble click en nodos del árbol para editar. Los cambios se perderán al recargar la página.
+            </p>
+          </div>
+        )}
         
         <Breadcrumbs 
           currentPath={currentPath} 
@@ -72,12 +90,39 @@ export default function SiroIntegrationBuilder() {
           {currentNode ? (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               
-              <section className="mb-6">
+              {isEditMode ? (
+                // --- MODO EDICIÓN ---
+                <EditNodePanel 
+                  currentNode={currentNode}
+                  updateNode={updateNode}
+                  addChildNode={addChildNode}
+                  deleteNode={deleteNode}
+                  currentPath={currentPath}
+                  setCurrentPath={setCurrentPath}
+                />
+              ) : (
+                // --- MODO NORMAL ---
+                <>
+                  <section className="mb-6">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
-                    <h1 className="text-3xl font-black text-[#005C35] mt-2 mb-2 leading-tight tracking-tight">
-                      {currentNode.title}
-                    </h1>
+                    {/* Mostrar imagen si existe, sino mostrar título normal */}
+                    {currentNode.imageUrl ? (
+                      <div className="mb-4">
+                        <img 
+                          src={currentNode.imageUrl} 
+                          alt={currentNode.title}
+                          className="h-16 w-auto max-w-xs object-contain mb-2"
+                        />
+                        <h1 className="text-2xl font-black text-[#005C35] leading-tight tracking-tight">
+                          {currentNode.title}
+                        </h1>
+                      </div>
+                    ) : (
+                      <h1 className="text-3xl font-black text-[#005C35] mt-2 mb-2 leading-tight tracking-tight">
+                        {currentNode.title}
+                      </h1>
+                    )}
                     <div className="h-1 w-20 bg-[#F2A900] rounded-full mb-4" aria-hidden="true"></div>
                     <p className="text-gray-600 text-lg leading-relaxed font-medium">
                       {currentNode.description}
@@ -110,6 +155,8 @@ export default function SiroIntegrationBuilder() {
                 setCurrentPath={setCurrentPath}
                 currentPath={currentPath}
               />
+              </>
+            )}
 
             </div>
           ) : (
@@ -121,6 +168,13 @@ export default function SiroIntegrationBuilder() {
 
       {/* --- PANEL DERECHO (VISUALIZACIÓN MAPA CONCEPTUAL) --- */}
       <section className="w-7/12 flex flex-col relative">
+        
+        {/* Banner de modo edición en el árbol */}
+        {isEditMode && (
+          <div className="absolute top-16 left-4 z-30 bg-[#F2A900] text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg">
+            Modo Edición: Doble click para editar
+          </div>
+        )}
         
         {/* Botón flotante de reporte */}
         <button 
@@ -219,11 +273,13 @@ export default function SiroIntegrationBuilder() {
             <nav className="tree" aria-label="Árbol de soluciones SIRO">
               <ul>
                 <ConceptTree 
-                  node={SIRO_DATA}
+                  node={treeData}
                   currentNodeId={currentNodeId}
                   selections={selections}
                   currentPath={currentPath}
                   setCurrentPath={setCurrentPath}
+                  isEditMode={isEditMode}
+                  updateNode={updateNode}
                 />
               </ul>
             </nav>
