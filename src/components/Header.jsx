@@ -1,12 +1,10 @@
-import { CheckCircle } from 'lucide-react';
-
 // Encabezado con logo SIRO y eslogan
 export default function Header() {
   return (
-    <header className="m-4 mb-0 p-4 bg-white border-2 border-[#005C35] rounded-tl-3xl rounded-tr-3xl rounded-br-3xl flex justify-between items-center shadow-sm">
-      <div className="flex items-center">
+    <header className="m-4 mb-0 p-4 bg-white border-2 border-[#005C35] rounded-tl-3xl rounded-tr-3xl rounded-br-3xl flex justify-between items-center shadow-sm hover:shadow-xl hover:border-[#007843] transition-all duration-300 group">
+      <div className="flex items-center transform group-hover:scale-105 transition-transform duration-300">
         <img 
-          src="https://mateoestrada5.github.io/integration-builder-v1/logoSiro.png"
+          src="logoSiro.png"
           alt="SIRO Logo" 
           className="h-10 object-contain"
           onError={(e) => {
@@ -14,15 +12,9 @@ export default function Header() {
             e.target.nextSibling.style.display = 'flex';
           }}
         />
-        <div className="hidden items-center" aria-label="SIRO">
-          <span className="text-2xl font-black text-[#005C35] tracking-tighter">SIRO</span>
-          <div className="w-4 h-4 rounded-full bg-[#F2A900] ml-1 flex items-center justify-center">
-            <CheckCircle size={10} className="text-white" />
-          </div>
-        </div>
       </div>
       
-      <span className="text-xs font-bold text-gray-700 uppercase tracking-wide">
+      <span className="text-xs font-bold text-gray-700 uppercase tracking-wide group-hover:text-[#005C35] group-hover:tracking-wider transition-all duration-300">
         Constructor de soluciones de pago a medida
       </span>
       
