@@ -110,7 +110,6 @@ const ConceptTree = memo(function ConceptTree({ node, currentNodeId, selections,
                 src={node.imageUrl}
                 alt={node.title}
                 className="h-8 w-auto max-w-[100px] object-contain"
-                title={node.title}
               />
               {/* Tooltip con el título */}
               <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">
